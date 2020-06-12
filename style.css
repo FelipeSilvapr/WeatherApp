@@ -1,0 +1,213 @@
+*{
+    margin: 0;
+    padding: 0; 
+    border: 0;
+    box-sizing: border-box;
+}
+
+/* Layout  division*/
+
+body{    
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
+
+.background-container{
+    position:absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:100%;
+    z-index: -1;
+}
+
+#background-video{   
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+    
+}
+
+.content{
+    height: 100vh;
+    display: flex;    
+}
+
+.content main{
+    flex: 1;
+    position: relative;
+    color: white;
+}
+
+.content aside{
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    background-color: #1B1B1B;
+    color: white;    
+    border-left: 1px solid rgba(192,192,192,0.2);
+}
+
+/* Layout main content section */
+
+/* 4 corners */
+
+.content main #logo{
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.content main span::after{
+    content: url(./assets/cardapiox32.png);
+    position: absolute;
+    top: 40px;
+    right: 40px;        
+}
+
+ /* bottom section */
+.content main .line-dash{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    border-top: 1px solid rgba(192,192,192,0.2);
+    padding: 7vh 0;        
+}
+
+.content main .line-dash > small {
+    position: absolute;    
+    left: 40px;
+    
+}
+
+.content main .button-container{
+    display: flex;
+    align-items: center;
+    position: absolute;    
+    right: 40px;
+}
+
+.content main .button-container small{
+    margin-right: 20px;
+}
+
+button.change{
+    font-size: 12px;    
+    padding: 6px 16px;
+    background-color:transparent;
+    border: solid grey 0.5px;
+    color: white;
+    cursor: pointer; 
+    outline: none;
+}
+
+/* Layout main content section */
+
+/* meio */
+
+.content main .degrees-container{
+    display: flex;   
+    position: absolute; 
+    bottom: 30%;   
+    left: 70px;
+}
+
+.content main .degrees-container #degrees{
+    font-size: 200px;
+    font-weight: 700;
+}
+
+.content main .degrees-container .info-text-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.content main .degrees-container .info-text-container strong{
+    font-size: 50px;    
+    font-weight: 500;
+}
+
+.content main .degrees-container .info-text-container p{
+    font-size: 30px;
+    font-weight: 300;
+    color: lightgray;     
+}
+
+/* Layout aside */
+
+.content aside .change-city {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 24px;
+    border-bottom: 1px solid rgba(192,192,192,0.2);
+}
+
+.content aside .scroll{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.content aside .scroll section{
+    display: flex;
+    flex-direction: column;
+    padding: 50px 50px;
+    border-bottom: 1px solid rgba(192,192,192,0.2);
+}
+
+/* Style aside */
+
+.content aside .change-city .city{
+    display: flex;
+    align-items: center;
+    
+}
+
+.content aside .change-city .city small{
+    font-size: 16px;
+    font-weight: 300;
+    color: lightgray;
+    margin-right: 20px;
+}
+
+.content aside .change-city .city p{
+    font-size: 600; 
+    margin-right: 10px;  
+}
+
+.content aside .scroll section ul{
+    list-style: none;   
+}
+
+.content aside .scroll section ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 24px 0;
+}
+
+.content aside .scroll section h3 {
+    margin: 16px 10px 0 10px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.content aside .scroll section ul li p{
+    font-size: 14px;
+    font-weight: 300;
+    color: lightgray;
+    margin: 0 10px;
+}
+
+.content aside .scroll section ul li span{
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    margin: 0 10px;
+}
