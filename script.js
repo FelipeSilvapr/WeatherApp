@@ -1,8 +1,21 @@
-var time = document.querySelectorAll(".line-dash small time")[0];
+// clock
+var time = document.querySelector(".line-dash small time");
+
+function formatClock() {
+  let date = new Date();
+  let day = dayOfTheWeek(date.getDay());
+  let month = monthOfTheYear(date.getMonth());
+  let year = date.getFullYear();
+  let dayDate = date.getDate();
+  let hour = date.getHours();
+  let minutes = date.getMinutes();
+
+  return `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} - ${day}, ${dayDate} ${month} ${year}`
+}
 
 setInterval(() => {
-  var date = new Date();
-  time.innerHTML = date;
+  time.innerHTML = formatClock();
+  time.setAttribute('datetime', new Date);
 }, 1000)
 
 // Change UI function 
@@ -27,8 +40,9 @@ function changeCurrentWeather(data) {
 
   changeBackgroundVideo(condition);
   changeInfoText(condition);
-  if (data.hasOwnProperty('rain')) isThereRain(data.rain['1h']);
-
+  if (data.hasOwnProperty('rain')) {
+      isThereRain(data.rain['1h'])
+  } 
 }
 
 function changeBackgroundVideo(condition) {
@@ -40,13 +54,14 @@ function changeInfoText(condition) {
   const phrase2 = document.querySelector('.info-text-container p');
 
   const phrasesToText1 = [
-    `It's a rainy day`, `esta nublado cair `];
+    `It is sunny today.`, `The sky is mostly cloudy`, `It's a rainy day`, `It’s really coming down out there.`, `It’s Freezing Out There`,
+  ];
   const phrasesToText2 = [
-    `Don't forget an umbrella`, `nao vai ver o sun`
+    `There’s Not A Cloud In The Sky`, `I Think The Sun Is Trying To Come Out.`, `Don't forget an umbrella`, `I’m Soaking Wet`, `Make Sure To Bundle Up!`,
   ];
 
   switch (condition) {
-    case 'Rain':
+    case 'Clear':
       phrase1.innerHTML = phrasesToText1[0];
       phrase2.innerHTML = phrasesToText2[0];
       break;
@@ -54,9 +69,20 @@ function changeInfoText(condition) {
       phrase1.innerHTML = phrasesToText1[1];
       phrase2.innerHTML = phrasesToText2[1];
       break;
+    case 'Rain':
+      phrase1.innerHTML = phrasesToText1[2];
+      phrase2.innerHTML = phrasesToText2[2];
+      break;
+    case 'Thunderstorm':
+      phrase1.innerHTML = phrasesToText1[3];
+      phrase2.innerHTML = phrasesToText2[3];
+      break;
+    case 'Snow':
+      phrase1.innerHTML = phrasesToText1[4];
+      phrase2.innerHTML = phrasesToText2[4];
+      break;
     default:
-    //console.log('nenhma categoria anterior')
-
+      console.log('nenhma categoria anterior');
   }
 }
 
@@ -78,7 +104,7 @@ function isThereRain(data) {
 
 function changeForecast(data) {
   let dateUnix;
-  let day;  
+  let day;
   const daysOfweek = document.querySelectorAll('.next-days li p time');
   const tempOfTheDays = document.querySelectorAll('.next-days span');
 
@@ -87,7 +113,7 @@ function changeForecast(data) {
     day = dayOfTheWeek(dateUnix.getDay());
     daysOfweek[i].innerHTML = day;
     daysOfweek[i].setAttribute('datetime', dateUnix);
-    tempOfTheDays[i].innerHTML = `${data.daily[i].temp.day}°`;
+    tempOfTheDays[i].innerHTML = `${Math.round(data.daily[i].temp.day)}°`;
   }
 }
 
@@ -110,19 +136,86 @@ function dayOfTheWeek(number) {
   }
 }
 
+function monthOfTheYear(number) {
+  switch (number) {
+    case 0:
+      return 'Jan';
+    case 1:
+      return 'Fev';
+    case 2:
+      return 'Mar';
+    case 3:
+      return 'Apr';
+    case 4:
+      return 'May';
+    case 5:
+      return 'Jun';
+    case 6:
+      return 'Jul';
+    case 7:
+      return 'Aug';
+    case 8:
+      return 'Sep';
+    case 9:
+      return 'Oct';
+    case 10:
+      return 'Nov';
+    case 11:
+      return 'Dec'
+  }
+}
 
+//button action
 
+var buttonMain = document.querySelector('main button.change');
+var buttonAside = document.querySelector('aside button.change');
 
+addOrRemoveEventeListener(handleChangeCity, 'add');
 
+function handleChangeCity() {
+  let cityName = document.querySelector('aside .city p');
+  var inputCityName = document.createElement('input');
+  inputCityName.placeholder = 'City Name';
+  inputCityName.type = 'text';
+  cityName.replaceWith(inputCityName);
+  inputCityName.focus();
+  addOrRemoveEventeListener(handleChangeCity, 'remove');
+  addOrRemoveEventeListener(submitCity, 'add');
 
+  inputCityName.addEventListener('keydown', (event) => {
+    if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+      event.preventDefault();
+      submitCity();
+    } else if (event.code === 'Escape') {
+      event.preventDefault();
+      inputCityName.replaceWith(cityName);
+      addOrRemoveEventeListener(submitCity, 'remove');
+      addOrRemoveEventeListener(handleChangeCity, 'add');
+    }
+  });
 
+  function submitCity() {
+    console.log(inputCityName.value)
+    city = inputCityName.value;
+    inputCityName.replaceWith(cityName);
+    fetchDataCurrentWeather();
+    addOrRemoveEventeListener(submitCity, 'remove');
+    addOrRemoveEventeListener(handleChangeCity, 'add');
+  }
+}
 
+function addOrRemoveEventeListener(callback, operation) {
+  if (operation === 'remove') {
+    buttonAside.removeEventListener('click', callback);
+    buttonMain.removeEventListener('click', callback);
+  } else if (operation === 'add') {
+    buttonMain.addEventListener('click', callback);
+    buttonAside.addEventListener('click', callback);
+  }
+}
 
-var city = "sao paulo";
-const API_KEY = "56198c8989cabb3f4e52f69e1f57ab81"
-
-var dataCurrentWeather;
-var dataForecast;
+var city = "São Paulo";
+const API_KEY = "56198c8989cabb3f4e52f69e1f57ab81";
 
 fetchDataCurrentWeather();
 
@@ -139,8 +232,6 @@ function fetchDataCurrentWeather() {
     console.log('Fetch problem: ' + err.message);
   });
 }
-
-
 
 function fetchDataOneCall(data) {
   var latitude = data.coord.lat;
