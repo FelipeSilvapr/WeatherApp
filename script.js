@@ -1,4 +1,4 @@
-// clock
+// clock ************************************************
 var time = document.querySelector(".line-dash small time");
 
 function formatClock() {
@@ -18,9 +18,7 @@ setInterval(() => {
   time.setAttribute('datetime', new Date);
 }, 1000)
 
-// Change UI function 
-
-// Change Current Weather
+// Change Current Weather ************************************************
 
 function changeCurrentWeather(data) {
   var condition = data.weather[0].main;
@@ -40,14 +38,69 @@ function changeCurrentWeather(data) {
 
   changeBackgroundVideo(condition);
   changeInfoText(condition);
+  notRain();
   if (data.hasOwnProperty('rain')) {
-      isThereRain(data.rain['1h'])
-  } 
+    isThereRain(data.rain['1h']);
+  }
 }
+
+function isThereRain(data) {
+  let weatherDetails = document.querySelector('.weather-details ul');
+  let li = document.createElement('li');
+  let p = document.createElement('p');
+  let span = document.createElement('span');
+
+  li.classList.add('precipitation');
+  p.innerHTML = 'Precipitation';
+  span.innerHTML = `${data}mm`;
+
+  li.append(p);
+  li.append(span);
+  weatherDetails.append(li);
+}
+
+function notRain() {
+  let weatherDetailsWithRain = document.querySelector('.weather-details ul li.precipitation');
+  if (weatherDetailsWithRain !== null) {
+    weatherDetailsWithRain.remove();
+  }
+}
+
+// change background video  ************************************************************************************
 
 function changeBackgroundVideo(condition) {
+  let backgorundVideo = document.querySelector('.background-container video');
+  let source = document.querySelector('.background-container video source');
 
+  const videos = ['assets/Pexels Videos 2558580.mp4', 'assets/video.mp4', 'assets/coverr-raindrops--1572170453303.mp4'];
+
+  switch (condition) {
+    case 'Clear':
+      source.setAttribute('src', videos[0]);
+      backgorundVideo.load();
+      break;
+    case 'Clouds':
+      source.setAttribute('src', videos[1]);
+      backgorundVideo.load();
+      break;
+    case 'Rain':
+      source.setAttribute('src', videos[2]);
+      backgorundVideo.load();
+      break;
+    case 'Thunderstorm':
+      source.setAttribute('src', videos[3]);
+      backgorundVideo.load();
+      break;
+    case 'Snow':
+      source.setAttribute('src', videos[4]);
+      backgorundVideo.load();
+      break;
+    default:
+      console.log('nenhma categoria anterior');
+  }
 }
+
+// change phrases *********************************************************************************************
 
 function changeInfoText(condition) {
   const phrase1 = document.querySelector('.info-text-container strong');
@@ -86,21 +139,7 @@ function changeInfoText(condition) {
   }
 }
 
-function isThereRain(data) {
-  var weatherDetails = document.querySelector('.weather-details ul');
-  var li = document.createElement('li');
-  var p = document.createElement('p');
-  var span = document.createElement('span');
-
-  p.innerHTML = 'Precipitation';
-  span.innerHTML = `${data}mm`;
-
-  li.append(p);
-  li.append(span);
-  weatherDetails.append(li);
-}
-
-// Change Forecast
+// Change Forecast **********************************************************************
 
 function changeForecast(data) {
   let dateUnix;
@@ -116,6 +155,8 @@ function changeForecast(data) {
     tempOfTheDays[i].innerHTML = `${Math.round(data.daily[i].temp.day)}°`;
   }
 }
+
+// dates ************************************************************************************************
 
 function dayOfTheWeek(number) {
   switch (number) {
@@ -165,17 +206,18 @@ function monthOfTheYear(number) {
   }
 }
 
-//button action
+//button action **************************************************************************
 
 var buttonMain = document.querySelector('main button.change');
 var buttonAside = document.querySelector('aside button.change');
+var recoverCityName;
 
 addOrRemoveEventeListener(handleChangeCity, 'add');
 
 function handleChangeCity() {
   let cityName = document.querySelector('aside .city p');
-  var inputCityName = document.createElement('input');
-  inputCityName.placeholder = 'City Name';
+  let inputCityName = document.createElement('input');
+  inputCityName.placeholder = 'city name';
   inputCityName.type = 'text';
   cityName.replaceWith(inputCityName);
   inputCityName.focus();
@@ -186,7 +228,11 @@ function handleChangeCity() {
     if (event.code === 'Enter' || event.code === 'NumpadEnter') {
       event.preventDefault();
       submitCity();
-    } else if (event.code === 'Escape') {
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.code === 'Escape') {
       event.preventDefault();
       inputCityName.replaceWith(cityName);
       addOrRemoveEventeListener(submitCity, 'remove');
@@ -196,7 +242,9 @@ function handleChangeCity() {
 
   function submitCity() {
     console.log(inputCityName.value)
-    city = inputCityName.value;
+    cityFetch = inputCityName.value;
+    recoverCityName = cityName.innerHTML;
+    cityName.innerHTML = '';
     inputCityName.replaceWith(cityName);
     fetchDataCurrentWeather();
     addOrRemoveEventeListener(submitCity, 'remove');
@@ -214,13 +262,22 @@ function addOrRemoveEventeListener(callback, operation) {
   }
 }
 
-var city = "São Paulo";
+function invalidCityName() {
+  let invalidCityName = document.querySelector('aside .city p');
+  //invalidCityName.innerHTML = 'Invalid city name';
+  invalidCityName.innerHTML = recoverCityName;
+}
+
+
+// Fectch data ********************************************************************
+
+var cityFetch = "São Paulo";
 const API_KEY = "56198c8989cabb3f4e52f69e1f57ab81";
 
 fetchDataCurrentWeather();
 
 function fetchDataCurrentWeather() {
-  const urlCurrentWeather = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${API_KEY}&lang=pt_br&units=metric`;
+  const urlCurrentWeather = `https://api.openweathermap.org/data/2.5/weather?q=${cityFetch}&APPID=${API_KEY}&units=metric`;
 
   fetch(urlCurrentWeather).then((response) => {
     return response.json();
@@ -229,6 +286,7 @@ function fetchDataCurrentWeather() {
     console.log(data);
     fetchDataOneCall(data);
   }).catch(err => {
+    invalidCityName();
     console.log('Fetch problem: ' + err.message);
   });
 }
@@ -248,35 +306,6 @@ function fetchDataOneCall(data) {
     console.log('Fetch problem: ' + err.message);
   });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //fetchDataForecast();

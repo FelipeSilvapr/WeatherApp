@@ -42,8 +42,8 @@ body{
 
 .content aside{
     display: flex;
-    flex-direction: column;
-    width: 25vw;
+    flex-direction: column;    
+    min-width: 25vw;    
     background-color: #1B1B1B;
     color: white;    
     border-left: 1px solid rgba(192,192,192,0.2);
@@ -216,14 +216,12 @@ button.change{
 /* input city style */
 
 .content aside .city input{
-    height: 20px;
-    width: fit-content;
+    height: 20px;         
     background-color: #1B1B1B;
     color: white;    
     font-size: 18px;
     outline: none;
     margin-right: 25px;   
     
-    border-bottom: lightgrey solid 1px;
-    
+    border-bottom: lightgrey solid 1px;    
 }
