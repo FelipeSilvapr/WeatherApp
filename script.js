@@ -72,7 +72,7 @@ function changeBackgroundVideo(condition) {
   let backgorundVideo = document.querySelector('.background-container video');
   let source = document.querySelector('.background-container video source');
 
-  const videos = ['assets/Pexels Videos 2558580.mp4', 'assets/video.mp4', 'assets/coverr-raindrops--1572170453303.mp4'];
+  const videos = ['assets/videos/clearsky.mp4','assets/videos/clouds.mp4', 'assets/videos/rain.mp4','assets/videos/thunderstorm.mp4','assets/videos/snow.mp4','assets/videos/drizzle.mp4'];
 
   switch (condition) {
     case 'Clear':
@@ -95,8 +95,12 @@ function changeBackgroundVideo(condition) {
       source.setAttribute('src', videos[4]);
       backgorundVideo.load();
       break;
+    case 'Drizzle':
+      source.setAttribute('src', videos[5]);
+      backgorundVideo.load();
+      break;
     default:
-      console.log('nenhma categoria anterior');
+      break;
   }
 }
 
@@ -107,10 +111,10 @@ function changeInfoText(condition) {
   const phrase2 = document.querySelector('.info-text-container p');
 
   const phrasesToText1 = [
-    `It is sunny today.`, `The sky is mostly cloudy`, `It's a rainy day`, `It’s really coming down out there.`, `It’s Freezing Out There`,
+    `It is sunny today.`, `The sky is mostly cloudy`, `It's a rainy day`, `It’s really coming down out there.`, `It’s Freezing Out There`,`It’s Just Drizzling`
   ];
   const phrasesToText2 = [
-    `There’s Not A Cloud In The Sky`, `I Think The Sun Is Trying To Come Out.`, `Don't forget an umbrella`, `I’m Soaking Wet`, `Make Sure To Bundle Up!`,
+    `There’s Not A Cloud In The Sky`, `I Think The Sun Is Trying To Come Out.`, `Don't forget an umbrella`, `I’m Soaking Wet`, `Make Sure To Bundle Up!`,''
   ];
 
   switch (condition) {
@@ -134,8 +138,12 @@ function changeInfoText(condition) {
       phrase1.innerHTML = phrasesToText1[4];
       phrase2.innerHTML = phrasesToText2[4];
       break;
+    case 'Drizzle':
+      phrase1.innerHTML = phrasesToText1[5];
+      phrase2.innerHTML = phrasesToText2[5];
+      break;
     default:
-      console.log('nenhma categoria anterior');
+      break;
   }
 }
 
@@ -240,8 +248,7 @@ function handleChangeCity() {
     }
   });
 
-  function submitCity() {
-    console.log(inputCityName.value)
+  function submitCity() {    
     cityFetch = inputCityName.value;
     recoverCityName = cityName.innerHTML;
     cityName.innerHTML = '';
@@ -267,7 +274,6 @@ function invalidCityName() {
   //invalidCityName.innerHTML = 'Invalid city name';
   invalidCityName.innerHTML = recoverCityName;
 }
-
 
 // Fectch data ********************************************************************
 
@@ -306,19 +312,3 @@ function fetchDataOneCall(data) {
     console.log('Fetch problem: ' + err.message);
   });
 }
-
-
-//fetchDataForecast();
-
-
-// function fetchDataForecast() {
-//   const urlForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=${API_KEY}&lang=pt_br&units=metric`;
-
-//   fetch(urlForecast).then((response) => {
-//     return response.json();
-//   }).then((data) => {    
-//     console.log(data)
-//   }).catch(err => {
-//     console.log('Fetch problem: ' + err.message);
-//   });
-// }
