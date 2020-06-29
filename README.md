@@ -1,3 +1,3 @@
 # WeatherApp
 
-https://felipesilvapr.github.io/WeatherApp/
+https://felipesilvapr.github.io/WeatherApp/.
